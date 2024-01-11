@@ -1,6 +1,6 @@
 import { WebSocket, WebSocketServer } from "ws";
 
-import { build } from "./app";
+import { build } from "./app.js";
 
 const start = async () => {
   const app = await build();
