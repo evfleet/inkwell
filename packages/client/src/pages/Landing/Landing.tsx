@@ -1,30 +1,26 @@
-import useWebSocket, { ReadyState } from "react-use-websocket";
+import { useNavigate } from "react-router-dom";
 
 export function Landing() {
-  const { readyState, sendJsonMessage } = useWebSocket("ws://localhost:8081");
+  const navigate = useNavigate();
 
-  const handleClickSendMessage = () => {
-    sendJsonMessage("ping");
-  };
+  async function handleCreateRoom() {
+    const res = await fetch("http://localhost:8081/room/create", {
+      method: "POST",
+    });
+    const data = await res.json();
 
-  const connectionStatus = {
-    [ReadyState.CONNECTING]: "Connecting",
-    [ReadyState.OPEN]: "Open",
-    [ReadyState.CLOSING]: "Closing",
-    [ReadyState.CLOSED]: "Closed",
-    [ReadyState.UNINSTANTIATED]: "Uninstantiated",
-  }[readyState];
+    navigate(`/room/${data.roomId}`);
+
+    console.log("data", data);
+  }
 
   return (
     <div>
       <p>Landing</p>
-      <span>The WebSocket is currently {connectionStatus}</span>
-      <button
-        onClick={handleClickSendMessage}
-        disabled={readyState !== ReadyState.OPEN}
-      >
-        Click Me to send 'Ping'
-      </button>
+
+      <button onClick={handleCreateRoom}>Create</button>
+
+      <button>Join</button>
     </div>
   );
 }

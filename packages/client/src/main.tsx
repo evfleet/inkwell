@@ -3,14 +3,18 @@ import ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import { Landing } from "./pages/Landing";
-import { CreateRoom } from "./pages/CreateRoom";
 import { Room } from "./pages/Room";
-import { Results } from "./pages/Results";
+import { JoinRoom } from "./pages/JoinRoom";
+import { CreateRoom } from "./pages/CreateRoom";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <Landing />,
+  },
+  {
+    path: "/room/join",
+    element: <JoinRoom />,
   },
   {
     path: "/room/create",
@@ -19,10 +23,6 @@ const router = createBrowserRouter([
   {
     path: "/room/:roomId",
     element: <Room />,
-  },
-  {
-    path: "/room/:roomId/results",
-    element: <Results />,
   },
 ]);
 
