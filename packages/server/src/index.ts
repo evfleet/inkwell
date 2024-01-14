@@ -1,3 +1,4 @@
+import "dotenv/config";
 import { WebSocket, WebSocketServer } from "ws";
 
 import { build } from "./app.js";
