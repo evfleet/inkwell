@@ -1,6 +1,8 @@
 import cors from "cors";
 import express from "express";
+import { pinoHttp } from "pino-http";
 
+import { logger } from "./config/logger.js";
 import router from "./routes/router.js";
 
 export async function build() {
@@ -12,6 +14,7 @@ export async function build() {
       origin: "http://localhost:5173",
     })
   );
+  app.use(pinoHttp({ logger }));
 
   app.use(router);
 
