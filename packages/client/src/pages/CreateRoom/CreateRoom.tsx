@@ -14,7 +14,7 @@ export function CreateRoom() {
     });
     const data = await res.json();
 
-    navigate(`/room/${data.id}`);
+    navigate(`/room/${data.roomId}`);
   });
 
   return (

@@ -7,14 +7,22 @@ export function Room() {
   const { sendJsonMessage } = useWebSocket("ws://localhost:8081");
 
   useEffect(() => {
-    console.log("mounted room");
-
-    sendJsonMessage({});
+    sendJsonMessage({
+      type: "join",
+      params: {
+        roomId,
+      },
+    });
 
     return () => {
-      console.log("unmount room");
+      sendJsonMessage({
+        type: "leave",
+        params: {
+          roomId,
+        },
+      });
     };
-  });
+  }, [roomId, sendJsonMessage]);
 
   return (
     <div>
