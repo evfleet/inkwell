@@ -2,6 +2,8 @@ import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import useWebSocket from "react-use-websocket";
 
+import { Canvas } from "@/components/Canvas";
+
 export function Room() {
   const { roomId } = useParams();
   const { sendJsonMessage } = useWebSocket("ws://localhost:8081");
@@ -27,6 +29,7 @@ export function Room() {
   return (
     <div>
       <p>Room: {roomId}</p>
+      <Canvas />
     </div>
   );
 }
