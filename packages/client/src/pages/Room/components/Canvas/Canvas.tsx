@@ -4,18 +4,10 @@ export function Canvas() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
-    const canvas = canvasRef.current;
-    const ctx = canvas?.getContext("2d");
-
-    if (!canvas) {
-      return;
-    }
+    const canvas = canvasRef.current!;
+    const ctx = canvas.getContext("2d")!;
 
     function draw(event: MouseEvent) {
-      if (!canvas || !ctx) {
-        return;
-      }
-
       const rect = canvas.getBoundingClientRect();
       const x = event.clientX - rect.left;
       const y = event.clientY - rect.top;
