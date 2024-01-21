@@ -1,0 +1,24 @@
+.container {
+  display: flex;
+}
+
+.invite {
+  position: relative;
+}
+
+.cover {
+  position: absolute;
+  z-index: 20;
+  width: 100%;
+  height: 100%;
+  background: blue;
+}
+
+.code {
+  z-index: 10;
+}
+
+.invite:hover .cover {
+  display: none;
+}
+
