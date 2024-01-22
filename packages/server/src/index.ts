@@ -1,5 +1,6 @@
 import "dotenv/config";
-import { WebSocket, WebSocketServer } from "ws";
+import http from "http";
+import { Server } from "socket.io";
 
 import { build } from "./app.js";
 import { logger } from "./config/logger.js";
@@ -7,27 +8,15 @@ import { logger } from "./config/logger.js";
 const start = async () => {
   const app = await build();
   const port = 8081;
+  const server = http.createServer(app);
+  const io = new Server(server);
 
-  const server = app.listen(port, () => {
+  server.listen(port, () => {
     logger.info(`Server running on port: ${port}`);
   });
 
-  const wss = new WebSocketServer({ server });
-
-  wss.on("connection", (ws) => {
-    ws.on("error", logger.error);
-
-    ws.on("message", (msg, isBinary) => {
-      wss.clients.forEach((client) => {
-        if (client.readyState === WebSocket.OPEN) {
-          client.send(msg, { binary: isBinary });
-        }
-      });
-    });
-
-    ws.on("close", () => {
-      logger.info("Connection closed");
-    });
+  io.on("connection", (socket) => {
+    logger.info("a user connected");
   });
 };
 

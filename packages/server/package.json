@@ -15,6 +15,7 @@
     "nanoid": "^5.0.4",
     "pino": "^8.17.2",
     "pino-http": "^9.0.0",
+    "socket.io": "^4.7.4",
     "ws": "^8.16.0"
   },
   "devDependencies": {
@@ -25,5 +26,9 @@
     "pino-pretty": "^10.3.1",
     "tsx": "^4.7.0",
     "typescript": "^5.2.2"
+  },
+  "optionalDependencies": {
+    "bufferutil": "^4.0.8",
+    "utf-8-validate": "^6.0.3"
   }
 }
