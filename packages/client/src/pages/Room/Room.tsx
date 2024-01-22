@@ -1,7 +1,7 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import useWebSocket from "react-use-websocket";
 
+import { socket } from "@/config/socket";
 import styles from "./Room.module.css";
 import { Canvas } from "./components/Canvas";
 import { Chat } from "./components/Chat";
@@ -11,25 +11,25 @@ import { Settings } from "./components/Settings";
 
 export function Room() {
   const { roomId } = useParams();
-  const { sendJsonMessage } = useWebSocket("ws://localhost:8081");
+  const [isConnected, setIsConnected] = useState(socket.connected);
 
   useEffect(() => {
-    sendJsonMessage({
-      type: "join",
-      params: {
-        roomId,
-      },
-    });
+    function onConnect() {
+      setIsConnected(true);
+    }
+
+    function onDisconnect() {
+      setIsConnected(false);
+    }
+
+    socket.on("connect", onConnect);
+    socket.on("disconnect", onDisconnect);
 
     return () => {
-      sendJsonMessage({
-        type: "leave",
-        params: {
-          roomId,
-        },
-      });
+      socket.off("connect", onConnect);
+      socket.off("disconnect", onDisconnect);
     };
-  }, [roomId, sendJsonMessage]);
+  }, []);
 
   if (!roomId) {
     return (
@@ -42,6 +42,7 @@ export function Room() {
   return (
     <div>
       <p>Room: {roomId}</p>
+      <p>Connected: {isConnected ? "true" : "false"}</p>
       <div className={styles.container}>
         <Lobby />
         <div>
