@@ -2,4 +2,5 @@ import { io } from "socket.io-client";
 
 export const socket = io("ws://localhost:8081", {
   transports: ["websocket"],
+  autoConnect: false,
 });
