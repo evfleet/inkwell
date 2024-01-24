@@ -1,12 +1,17 @@
-import { Link } from "react-router-dom";
+import { Dispatch, SetStateAction } from "react";
 
-export function Landing() {
+import { View } from "@/types";
+
+type LandingProps = {
+  setView: Dispatch<SetStateAction<View>>;
+};
+
+export function Landing({ setView }: LandingProps) {
   return (
     <div>
-      <p>Landing</p>
-
-      <Link to="/room/join">Join</Link>
-      <Link to="/room/create">Create</Link>
+      <h1>Inkwell</h1>
+      <button onClick={() => setView(View.CREATE)}>Create</button>
+      <button onClick={() => setView(View.JOIN)}>Join</button>
     </div>
   );
 }

@@ -1,31 +1,38 @@
-import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import { ChangeEvent, Dispatch, SetStateAction } from "react";
+import { useShallow } from "zustand/react/shallow";
 
-export function JoinRoom() {
-  const navigate = useNavigate();
-  const { register, handleSubmit } = useForm();
+import { View } from "@/types";
+import { useUserStore } from "@/stores/user";
 
-  const onSubmit = handleSubmit((data) => {
-    navigate(`/room/${data.id}`);
-  });
+type JoinRoomProps = {
+  setView: Dispatch<SetStateAction<View>>;
+};
+
+export function JoinRoom({ setView }: JoinRoomProps) {
+  const [username, setUsername] = useUserStore(
+    useShallow((state) => [state.username, state.setUsername])
+  );
+
+  function handleJoin() {
+    setView(View.LOBBY);
+  }
+
+  function handleNameChange(evt: ChangeEvent<HTMLInputElement>) {
+    setUsername(evt.target.value);
+  }
 
   return (
     <div>
       <p>Join Room</p>
-
-      <form onSubmit={onSubmit}>
-        <div>
-          <label>Game ID</label>
-          <input type="text" {...register("id")} />
-        </div>
-
-        <div>
-          <label>Password</label>
-          <input type="text" {...register("password")} />
-        </div>
-
-        <button type="submit">Join</button>
-      </form>
+      <input
+        type="text"
+        name="username"
+        value={username}
+        onChange={handleNameChange}
+      />
+      <input type="text" name="code" />
+      <button onClick={handleJoin}>Join</button>
+      <button onClick={() => setView(View.LANDING)}>Back</button>
     </div>
   );
 }

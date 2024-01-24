@@ -1,44 +1,37 @@
-import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import { ChangeEvent, Dispatch, SetStateAction } from "react";
+import { useShallow } from "zustand/react/shallow";
 
-export function CreateRoom() {
-  const navigate = useNavigate();
-  const { register, handleSubmit } = useForm({
-    defaultValues: {
-      username: "Evan",
-      capacity: 6,
-    },
-  });
+import { View } from "@/types";
+import { useUserStore } from "@/stores/user";
 
-  const onSubmit = handleSubmit(async (formData) => {
-    const res = await fetch("http://localhost:8081/room/create", {
-      method: "POST",
-      body: JSON.stringify({
-        username: formData.username,
-        capacity: formData.capacity,
-      }),
-    });
-    const data = await res.json();
+type CreateRoomProps = {
+  setView: Dispatch<SetStateAction<View>>;
+};
 
-    navigate(`/room/${data.roomId}`);
-  });
+export function CreateRoom({ setView }: CreateRoomProps) {
+  const [username, setUsername] = useUserStore(
+    useShallow((state) => [state.username, state.setUsername])
+  );
+
+  function handleCreate() {
+    setView(View.LOBBY);
+  }
+
+  function handleNameChange(evt: ChangeEvent<HTMLInputElement>) {
+    setUsername(evt.target.value);
+  }
 
   return (
     <div>
-      <p>Create Room</p>
-      <form onSubmit={onSubmit}>
-        <div>
-          <label>Name</label>
-          <input type="text" {...register("username")} />
-        </div>
-
-        <div>
-          <label>Players</label>
-          <input type="number" {...register("capacity")} />
-        </div>
-
-        <button type="submit">Create</button>
-      </form>
+      <p>Create</p>
+      <input
+        type="text"
+        name="username"
+        value={username}
+        onChange={handleNameChange}
+      />
+      <button onClick={handleCreate}>Create</button>
+      <button onClick={() => setView(View.LANDING)}>Back</button>
     </div>
   );
 }

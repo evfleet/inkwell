@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
 
 import { socket } from "@/config/socket";
 import styles from "./Room.module.css";

@@ -1,11 +1,10 @@
 import { useState, useEffect } from "react";
 
-enum View {
-  LANDING,
-  CREATE,
-  JOIN,
-  LOBBY,
-}
+import { View } from "@/types";
+import { Landing } from "@/views/Landing";
+import { CreateRoom } from "@/views/CreateRoom";
+import { JoinRoom } from "@/views/JoinRoom";
+import { Lobby } from "@/views/Lobby";
 
 export function App() {
   const [isLoading, setIsLoading] = useState(true);
@@ -15,11 +14,11 @@ export function App() {
     // parse room code and try joining
     const urlString = window.location.search;
 
-    console.log(urlString);
+    if (urlString) {
+      console.log(urlString);
+    }
 
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 1000);
+    setIsLoading(false);
   }, []);
 
   if (isLoading) {
@@ -32,19 +31,16 @@ export function App() {
 
   switch (view) {
     case View.LANDING:
-      return (
-        <div>
-          <p>Landing</p>
-          <button onClick={() => setView(View.CREATE)}>Create</button>
-        </div>
-      );
+      return <Landing setView={setView} />;
 
     case View.CREATE:
-      return (
-        <div>
-          <p>Create Room</p>
-        </div>
-      );
+      return <CreateRoom setView={setView} />;
+
+    case View.JOIN:
+      return <JoinRoom setView={setView} />;
+
+    case View.LOBBY:
+      return <Lobby />;
 
     default:
       return (
