@@ -8,6 +8,6 @@ type ViewState = {
 };
 
 export const useViewStore = create<ViewState>((set) => ({
-  view: "landing",
+  view: "create",
   setView: (view) => set({ view }),
 }));
