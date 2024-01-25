@@ -3,7 +3,6 @@ import express from "express";
 import { pinoHttp } from "pino-http";
 
 import { logger } from "./config/logger.js";
-import router from "./routes/router.js";
 
 export async function build() {
   const app = express();
@@ -15,8 +14,6 @@ export async function build() {
     })
   );
   app.use(pinoHttp({ logger }));
-
-  app.use(router);
 
   return app;
 }

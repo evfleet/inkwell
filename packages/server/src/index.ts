@@ -4,6 +4,7 @@ import { Server } from "socket.io";
 
 import { build } from "./app.js";
 import { logger } from "./config/logger.js";
+import { handler } from "./events/handler.js";
 
 const start = async () => {
   const app = await build();
@@ -16,7 +17,7 @@ const start = async () => {
   });
 
   io.on("connection", (socket) => {
-    logger.info("a user connected");
+    handler(io, socket);
   });
 };
 
