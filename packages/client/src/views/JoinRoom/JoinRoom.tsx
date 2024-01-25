@@ -1,20 +1,18 @@
-import { ChangeEvent, Dispatch, SetStateAction } from "react";
+import { ChangeEvent } from "react";
 import { useShallow } from "zustand/react/shallow";
 
-import { View } from "@/types";
 import { useUserStore } from "@/stores/user";
+import { useViewStore } from "@/stores/view";
 
-type JoinRoomProps = {
-  setView: Dispatch<SetStateAction<View>>;
-};
-
-export function JoinRoom({ setView }: JoinRoomProps) {
+export function JoinRoom() {
   const [username, setUsername] = useUserStore(
     useShallow((state) => [state.username, state.setUsername])
   );
 
+  const setView = useViewStore((state) => state.setView);
+
   function handleJoin() {
-    setView(View.LOBBY);
+    setView("lobby");
   }
 
   function handleNameChange(evt: ChangeEvent<HTMLInputElement>) {
@@ -32,7 +30,7 @@ export function JoinRoom({ setView }: JoinRoomProps) {
       />
       <input type="text" name="code" />
       <button onClick={handleJoin}>Join</button>
-      <button onClick={() => setView(View.LANDING)}>Back</button>
+      <button onClick={() => setView("landing")}>Back</button>
     </div>
   );
 }

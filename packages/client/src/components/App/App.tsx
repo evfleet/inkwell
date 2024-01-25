@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 
-import { View } from "@/types";
+import { useUserStore } from "@/stores/user";
+import { useViewStore } from "@/stores/view";
 import { Landing } from "@/views/Landing";
 import { CreateRoom } from "@/views/CreateRoom";
 import { JoinRoom } from "@/views/JoinRoom";
@@ -8,7 +9,8 @@ import { Lobby } from "@/views/Lobby";
 
 export function App() {
   const [isLoading, setIsLoading] = useState(true);
-  const [view, setView] = useState<View>(View.LANDING);
+  const view = useViewStore((state) => state.view);
+  const hydrated = useUserStore((state) => state.hydrated);
 
   useEffect(() => {
     // parse room code and try joining
@@ -17,9 +19,13 @@ export function App() {
     if (urlString) {
       console.log(urlString);
     }
-
-    setIsLoading(false);
   }, []);
+
+  useEffect(() => {
+    if (hydrated) {
+      setIsLoading(false);
+    }
+  }, [hydrated]);
 
   if (isLoading) {
     return (
@@ -30,16 +36,16 @@ export function App() {
   }
 
   switch (view) {
-    case View.LANDING:
-      return <Landing setView={setView} />;
+    case "landing":
+      return <Landing />;
 
-    case View.CREATE:
-      return <CreateRoom setView={setView} />;
+    case "create":
+      return <CreateRoom />;
 
-    case View.JOIN:
-      return <JoinRoom setView={setView} />;
+    case "join":
+      return <JoinRoom />;
 
-    case View.LOBBY:
+    case "lobby":
       return <Lobby />;
 
     default:

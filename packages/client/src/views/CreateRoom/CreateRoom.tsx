@@ -1,20 +1,18 @@
-import { ChangeEvent, Dispatch, SetStateAction } from "react";
+import { ChangeEvent } from "react";
 import { useShallow } from "zustand/react/shallow";
 
-import { View } from "@/types";
 import { useUserStore } from "@/stores/user";
+import { useViewStore } from "@/stores/view";
 
-type CreateRoomProps = {
-  setView: Dispatch<SetStateAction<View>>;
-};
-
-export function CreateRoom({ setView }: CreateRoomProps) {
+export function CreateRoom() {
   const [username, setUsername] = useUserStore(
     useShallow((state) => [state.username, state.setUsername])
   );
 
+  const setView = useViewStore((state) => state.setView);
+
   function handleCreate() {
-    setView(View.LOBBY);
+    setView("lobby");
   }
 
   function handleNameChange(evt: ChangeEvent<HTMLInputElement>) {
@@ -31,7 +29,7 @@ export function CreateRoom({ setView }: CreateRoomProps) {
         onChange={handleNameChange}
       />
       <button onClick={handleCreate}>Create</button>
-      <button onClick={() => setView(View.LANDING)}>Back</button>
+      <button onClick={() => setView("landing")}>Back</button>
     </div>
   );
 }
