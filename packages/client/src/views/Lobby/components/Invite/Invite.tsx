@@ -3,15 +3,15 @@ import { useState } from "react";
 import styles from "./Invite.module.css";
 
 type InviteProps = {
-  code: string;
+  roomId: string;
 };
 
-export function Invite({ code }: InviteProps) {
+export function Invite({ roomId }: InviteProps) {
   const [isCopied, setIsCopied] = useState(false);
 
   async function handleCopyClick() {
     try {
-      await navigator.clipboard.writeText(code);
+      await navigator.clipboard.writeText(roomId);
       setIsCopied(true);
     } catch (err) {
       console.log("err copying", err);
@@ -28,7 +28,7 @@ export function Invite({ code }: InviteProps) {
     <div className={styles.container} onMouseLeave={handleMouseLeave}>
       <div className={styles.invite}>
         <div className={styles.cover}>Hover to see code</div>
-        <p className={styles.code}>{code}</p>
+        <p className={styles.code}>{roomId}</p>
       </div>
 
       <button onClick={handleCopyClick}>{isCopied ? "Copied" : "Copy"}</button>

@@ -1,6 +1,10 @@
 import { useRef, useEffect, useState } from "react";
 
-export function Canvas() {
+type CanvasProps = {
+  className?: string;
+};
+
+export function Canvas({ className }: CanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [isDrawing, setIsDrawing] = useState(false);
 
@@ -47,5 +51,5 @@ export function Canvas() {
     };
   }, [isDrawing]);
 
-  return <canvas ref={canvasRef} style={{ border: "1px solid black" }} />;
+  return <canvas ref={canvasRef} className={className} />;
 }
