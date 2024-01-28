@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect, useState, useLayoutEffect } from "react";
 
 type CanvasProps = {
   className?: string;
@@ -7,6 +7,32 @@ type CanvasProps = {
 export function Canvas({ className }: CanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [isDrawing, setIsDrawing] = useState(false);
+
+  useLayoutEffect(() => {
+    const canvas = canvasRef.current!;
+
+    console.log("layout");
+
+    // clears canvas, need to save drawing in state
+    canvas.width = canvas.offsetWidth;
+    canvas.height = canvas.offsetHeight;
+  }, []);
+
+  useEffect(() => {
+    function handleResize() {
+      const canvas = canvasRef.current!;
+      canvas.width = canvas.offsetWidth;
+      canvas.height = canvas.offsetHeight;
+
+      // redraw canvas content
+    }
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   useEffect(() => {
     const canvas = canvasRef.current!;

@@ -5,9 +5,11 @@
 .container {
   display: grid;
   grid-template-columns: 200px 1fr 200px;
+  height: 100%;
 }
 
 .canvas {
+  display: block;
   width: 100%;
   height: 100%;
 }
