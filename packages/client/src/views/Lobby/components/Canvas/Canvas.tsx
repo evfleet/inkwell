@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState, useLayoutEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 
 type CanvasProps = {
   className?: string;
@@ -8,29 +8,26 @@ export function Canvas({ className }: CanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [isDrawing, setIsDrawing] = useState(false);
 
-  useLayoutEffect(() => {
+  function handleClear() {
     const canvas = canvasRef.current!;
+    const ctx = canvas.getContext("2d")!;
 
-    console.log("layout");
-
-    // clears canvas, need to save drawing in state
-    canvas.width = canvas.offsetWidth;
-    canvas.height = canvas.offsetHeight;
-  }, []);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }
 
   useEffect(() => {
-    function handleResize() {
+    function resizeCanvas() {
       const canvas = canvasRef.current!;
       canvas.width = canvas.offsetWidth;
       canvas.height = canvas.offsetHeight;
-
-      // redraw canvas content
     }
 
-    window.addEventListener("resize", handleResize);
+    window.addEventListener("resize", resizeCanvas);
+
+    resizeCanvas();
 
     return () => {
-      window.removeEventListener("resize", handleResize);
+      window.removeEventListener("resize", resizeCanvas);
     };
   }, []);
 
@@ -38,44 +35,74 @@ export function Canvas({ className }: CanvasProps) {
     const canvas = canvasRef.current!;
     const ctx = canvas.getContext("2d")!;
 
-    function handleMouseUp() {
-      setIsDrawing(false);
+    function getCoordinates(event: MouseEvent) {
+      const rect = canvas.getBoundingClientRect();
+
+      return {
+        x: event.clientX - rect.left,
+        y: event.clientY - rect.top,
+      };
     }
 
-    function handleMouseDown() {
+    function handleDrawStart(event: MouseEvent) {
+      const { x, y } = getCoordinates(event);
+
       setIsDrawing(true);
+
+      ctx.beginPath();
+      ctx.moveTo(x, y);
+
+      event.preventDefault();
     }
 
-    function handleMouseMove(event: MouseEvent) {
+    function handleDrawStop(event: MouseEvent) {
+      if (isDrawing) {
+        setIsDrawing(false);
+
+        ctx.stroke();
+        ctx.closePath();
+      }
+
+      event.preventDefault();
+    }
+
+    function handleDraw(event: MouseEvent) {
       if (!isDrawing) {
         return;
       }
 
-      const rect = canvas.getBoundingClientRect();
-      const x = event.clientX - rect.left;
-      const y = event.clientY - rect.top;
+      const { x, y } = getCoordinates(event);
 
       ctx.strokeStyle = "#000";
       ctx.lineWidth = 5;
       ctx.lineCap = "round";
-      ctx.beginPath();
-      ctx.moveTo(x, y);
+      ctx.lineJoin = "round";
       ctx.lineTo(x, y);
       ctx.stroke();
+
+      event.preventDefault();
     }
 
-    canvas.addEventListener("mouseup", handleMouseUp);
-    canvas.addEventListener("mousedown", handleMouseDown);
-    canvas.addEventListener("mousemove", handleMouseMove);
-    canvas.addEventListener("mouseleave", handleMouseUp);
+    canvas.addEventListener("mouseup", handleDrawStop);
+    canvas.addEventListener("mousedown", handleDrawStart);
+    canvas.addEventListener("mousemove", handleDraw);
+    canvas.addEventListener("mouseleave", handleDrawStop);
 
     return () => {
-      canvas.removeEventListener("mouseup", handleMouseUp);
-      canvas.removeEventListener("mousedown", handleMouseDown);
-      canvas.removeEventListener("mousemove", handleMouseMove);
-      canvas.removeEventListener("mouseleave", handleMouseUp);
+      canvas.removeEventListener("mouseup", handleDrawStop);
+      canvas.removeEventListener("mousedown", handleDrawStart);
+      canvas.removeEventListener("mousemove", handleDraw);
+      canvas.removeEventListener("mouseleave", handleDrawStop);
     };
   }, [isDrawing]);
 
-  return <canvas ref={canvasRef} className={className} />;
+  return (
+    <div>
+      <div>
+        <button onClick={handleClear}>Clear</button>
+        <button>Undo</button>
+      </div>
+      <canvas ref={canvasRef} className={className} />
+    </div>
+  );
 }
