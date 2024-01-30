@@ -7,6 +7,7 @@ type CanvasProps = {
 export function Canvas({ className }: CanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [isDrawing, setIsDrawing] = useState(false);
+  const [color, setColor] = useState("black");
 
   function handleClear() {
     const canvas = canvasRef.current!;
@@ -73,7 +74,7 @@ export function Canvas({ className }: CanvasProps) {
 
       const { x, y } = getCoordinates(event);
 
-      ctx.strokeStyle = "#000";
+      ctx.strokeStyle = color;
       ctx.lineWidth = 5;
       ctx.lineCap = "round";
       ctx.lineJoin = "round";
@@ -94,13 +95,15 @@ export function Canvas({ className }: CanvasProps) {
       canvas.removeEventListener("mousemove", handleDraw);
       canvas.removeEventListener("mouseleave", handleDrawStop);
     };
-  }, [isDrawing]);
+  }, [color, isDrawing]);
 
   return (
     <div>
       <div>
         <button onClick={handleClear}>Clear</button>
         <button>Undo</button>
+        <button onClick={() => setColor("red")}>Red</button>
+        <button onClick={() => setColor("black")}>Black</button>
       </div>
       <canvas ref={canvasRef} className={className} />
     </div>
