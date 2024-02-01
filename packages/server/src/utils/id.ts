@@ -12,11 +12,9 @@ export function createId(length = 12) {
 export function createUnusedId(io: Server) {
   const id = createId();
 
-  if (!io.sockets.adapter.rooms.get(id)) {
-    console.log("return id");
-    return id;
+  if (io.sockets.adapter.rooms.get(id)) {
+    return createUnusedId(io);
   }
 
-  console.log("id used, generating new");
-  return createUnusedId(io);
+  return id;
 }
